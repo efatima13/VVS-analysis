@@ -40,8 +40,9 @@ public class ProdavnicaController : ControllerBase
         using var conn = new SqliteConnection(Baza.ConnString);
         conn.Open();
         var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT Username FROM Users WHERE Username = '" + username +
-                          "' AND Password = '" + password + "'";
+        cmd.CommandText = "SELECT Username FROM Users WHERE Username = @username AND Password = @password";
+        cmd.Parameters.AddWithValue("@username", username);
+        cmd.Parameters.AddWithValue("@password", password);
         try
         {
             var user = cmd.ExecuteScalar();
@@ -59,7 +60,8 @@ public class ProdavnicaController : ControllerBase
         using var conn = new SqliteConnection(Baza.ConnString);
         conn.Open();
         var cmd = conn.CreateCommand();
-        cmd.CommandText = $"SELECT * FROM Proizvodi WHERE Naziv = '{naziv}'";
+        cmd.CommandText = "SELECT * FROM Proizvodi WHERE Naziv = @naziv";
+        cmd.Parameters.AddWithValue("@naziv", naziv);
         try
         {
             return Ok(Citaj(cmd));
